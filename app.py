@@ -1,196 +1,314 @@
 import streamlit as st
 
-st.set_page_config(
-    page_title="Sozialbericht-Assistent",
-    layout="wide"
-)
+st.set_page_config(page_title="Sozialbericht-Assistent", layout="wide")
 
-# SESSION STATE
+st.title("Sozialbericht-Assistent")
 
-defaults = {
-    "beruf": "",
-    "biografie": "",
-    "wohnung": "",
-    "lebt": "",
-    "wohntext": "",
-    "familie": ""
-}
+# ---------------------------------------------------
+# STAMMDATEN
+# ---------------------------------------------------
 
-for key, value in defaults.items():
-    if key not in st.session_state:
-        st.session_state[key] = value
+st.header("Stammdaten")
 
-# TITEL
+name = st.text_input("Name der betroffenen Person")
+geburt = st.text_input("Geburtsdatum")
+datum = st.date_input("Datum des Hausbesuchs")
 
-st.title("🧾 Sozialbericht-Assistent")
+# ---------------------------------------------------
+# 1. SOZIALE SITUATION
+# ---------------------------------------------------
 
-st.markdown("---")
+st.header("1. Zur sozialen Situation")
 
-# SIDEBAR
-
-st.sidebar.title("Bereiche")
-
-bereich = st.sidebar.radio(
-    "Navigation",
+beruf = st.selectbox(
+    "Berufliche Situation",
     [
-        "Soziale Situation",
-        "Wohnsituation",
-        "Familiäre Situation",
-        "Bericht"
+        "arbeitslos",
+        "EU-Rente",
+        "Rentner/in",
+        "erwerbstätig",
+        "Grundsicherung",
+        "Bürgergeld",
+        "sonstige"
     ]
 )
 
-# SOZIALE SITUATION
+ausbildung = st.text_input("Ausbildung / früherer Beruf")
 
-if bereich == "Soziale Situation":
+biografie = st.text_area(
+    "Biografische Angaben",
+    height=120
+)
 
-    st.header("Biografie und beruflicher Werdegang")
+wohnung = st.selectbox(
+    "Wohnsituation",
+    [
+        "1-Raum-Wohnung",
+        "2-Raum-Wohnung",
+        "betreutes Wohnen",
+        "Pflegeheim",
+        "Wohnungslosigkeit",
+        "sonstige"
+    ]
+)
 
-    st.session_state.beruf = st.selectbox(
-        "Berufliche Situation",
-        [
-            "Rentner/in",
-            "arbeitslos",
-            "erwerbstätig",
-            "EU-Rente",
-            "Grundsicherung",
-            "sonstige"
-        ]
-    )
+lebt = st.selectbox(
+    "Lebenssituation",
+    [
+        "alleinlebend",
+        "mit Angehörigen",
+        "mit Partner/in",
+        "mit Mitbewohnern"
+    ]
+)
 
-    st.session_state.biografie = st.text_area(
-        "Biografische Angaben",
-        value=st.session_state.biografie,
-        height=250
-    )
+familie = st.text_area(
+    "Angehörige / soziale Kontakte",
+    height=120
+)
 
-# WOHNSITUATION
+# ---------------------------------------------------
+# 2. FINANZIELLE SITUATION
+# ---------------------------------------------------
 
-elif bereich == "Wohnsituation":
+st.header("2. Finanzielle Situation")
 
-    st.header("Wohn- und Lebensverhältnisse")
+einkommen = st.text_input("Einkommen / Leistungen")
 
-    st.session_state.wohnung = st.selectbox(
-        "Wohnform",
-        [
-            "1-Raum-Wohnung",
-            "2-Raum-Wohnung",
-            "betreutes Wohnen",
-            "Pflegeheim",
-            "Wohngemeinschaft"
-        ]
-    )
+schulden = st.text_area(
+    "Schulden / offene Forderungen",
+    height=120
+)
 
-    st.session_state.lebt = st.selectbox(
-        "Lebenssituation",
-        [
-            "alleinlebend",
-            "mit Angehörigen",
-            "mit Partner/in",
-            "mit Mitbewohnern"
-        ]
-    )
+miete = st.text_input("Mietkosten")
 
-    st.session_state.wohntext = st.text_area(
-        "Weitere Angaben",
-        value=st.session_state.wohntext,
-        height=250
-    )
+# ---------------------------------------------------
+# 3. GESUNDHEITLICHE SITUATION
+# ---------------------------------------------------
 
-# FAMILIE
+st.header("3. Gesundheitliche Situation")
 
-elif bereich == "Familiäre Situation":
+psychisch = st.checkbox("psychische Erkrankung")
+koerperlich = st.checkbox("körperliche Einschränkungen")
+sucht = st.checkbox("Suchterkrankung / Alkoholproblematik")
 
-    st.header("Angehörige / Unterstützung")
+diagnosen = st.text_area(
+    "Diagnosen / gesundheitliche Einschränkungen",
+    height=150
+)
 
-    st.session_state.familie = st.text_area(
-        "Familiäre Situation",
-        value=st.session_state.familie,
-        height=250
-    )
+pflegegrad = st.selectbox(
+    "Pflegegrad",
+    [
+        "kein Pflegegrad",
+        "Pflegegrad 1",
+        "Pflegegrad 2",
+        "Pflegegrad 3",
+        "Pflegegrad 4",
+        "Pflegegrad 5"
+    ]
+)
 
-# BERICHT
+arzt = st.text_input("Hausarzt / Behandlungssituation")
 
-elif bereich == "Bericht":
+# ---------------------------------------------------
+# 4. PRAKTISCHE LEBENSBEWÄLTIGUNG
+# ---------------------------------------------------
 
-    st.header("Bericht erstellen")
+st.header("4. Praktische Lebensbewältigung")
 
-    if st.button("Professionellen Bericht generieren"):
+wohnung_zustand = st.selectbox(
+    "Zustand der Wohnung",
+    [
+        "gepflegt",
+        "leicht unordentlich",
+        "deutlich verwahrlost",
+        "stark vermüllt"
+    ]
+)
 
-        # BERUFSTEXT
+post = st.checkbox("ungeöffnete Post vorhanden")
+geld = st.checkbox("Probleme im Umgang mit Geld")
+arztmeidung = st.checkbox("fehlende Krankheitseinsicht / Arztmeidung")
 
-        beruf_text = f"""
-Die betroffene Person befindet sich derzeit in der Situation
-„{st.session_state.beruf}“.
-"""
+alltag = st.text_area(
+    "Einschätzung der Alltagsbewältigung",
+    height=200
+)
 
-        if "EU-Rente" in st.session_state.beruf:
-            beruf_text += """
-Aufgrund gesundheitlicher Einschränkungen besteht bereits seit längerer Zeit keine reguläre Erwerbstätigkeit mehr.
-"""
+# ---------------------------------------------------
+# 5. BETREUUNGSBEDARF
+# ---------------------------------------------------
 
-        if "arbeitslos" in st.session_state.beruf:
-            beruf_text += """
-Die aktuelle berufliche Situation ist durch fehlende Erwerbstätigkeit und eingeschränkte berufliche Perspektiven geprägt.
-"""
+st.header("5. Einschätzung des Betreuungsbedarfs")
 
-        # WOHNEN
+hilfen = st.text_area(
+    "Bereits bestehende Hilfen",
+    height=120
+)
 
-        wohn_text = f"""
-Die betroffene Person lebt derzeit in einer {st.session_state.wohnung} und ist {st.session_state.lebt}.
-"""
+betreuung = st.multiselect(
+    "Empfohlene Aufgabenkreise",
+    [
+        "Vermögenssorge",
+        "Wohnungsangelegenheiten",
+        "Gesundheitssorge",
+        "Behördenangelegenheiten",
+        "Postangelegenheiten",
+        "Vertretung gegenüber Institutionen"
+    ]
+)
 
-        if "alleinlebend" in st.session_state.lebt:
-            wohn_text += """
-Im Alltag besteht dadurch ein erhöhter Bedarf an eigenständiger Strukturierung und Versorgung.
-"""
+schluss = st.text_area(
+    "Weitere fachliche Einschätzung",
+    height=180
+)
 
-        # FAMILIE
+# ---------------------------------------------------
+# BERICHT GENERIEREN
+# ---------------------------------------------------
 
-        familie_text = f"""
-Zur familiären Situation ist Folgendes bekannt:
+if st.button("Sozialbericht erstellen"):
 
-{st.session_state.familie}
-"""
-
-        if "keine Angehörige" in st.session_state.familie.lower():
-            familie_text += """
-Ein tragfähiges familiäres Unterstützungsnetz scheint derzeit nicht vorhanden zu sein.
-"""
-
-        # GESAMTBERICHT
-
-        bericht = f"""
+    bericht = f"""
 SOZIALBERICHT
 
+Betroffene Person: {name}
+Geburtsdatum: {geburt}
 
-1. Biografie und beruflicher Werdegang
+Hausbesuch vom: {datum}
 
-{beruf_text}
+--------------------------------------------------
+
+1. Zur sozialen Situation
+
+Biografie, Ausbildung und beruflicher Werdegang:
+
+Die betroffene Person befinde sich derzeit in folgender beruflicher Situation: {beruf}.
+
+Zur bisherigen beruflichen Entwicklung wurde angegeben:
+{ausbildung}
 
 Weitere biografische Angaben:
+{biografie}
 
-{st.session_state.biografie}
+Wohn- und Lebensverhältnisse:
 
+Die betroffene Person lebe derzeit in einer {wohnung} und sei {lebt}.
 
-2. Wohn- und Lebensverhältnisse
+Familiäre Situation, Angehörige und soziale Kontakte:
 
-{wohn_text}
+{familie}
 
-Weitere Angaben zur Wohnsituation:
+--------------------------------------------------
 
-{st.session_state.wohntext}
+2. Zur finanziellen Situation
 
+Einkommen / Leistungen:
 
-3. Familiäre Situation
+Die betroffene Person verfüge derzeit über folgende Leistungen bzw. Einkünfte:
+{einkommen}
 
-{familie_text}
+Schulden / offene Forderungen:
+
+{schulden}
+
+Die monatlichen Mietkosten belaufen sich auf ca. {miete} Euro.
+
+--------------------------------------------------
+
+3. Gesundheitliche Situation
+
+Gesundheitliche Einschränkungen:
+
 """
 
-        st.success("Professioneller Bericht erstellt")
+    if psychisch:
+        bericht += "- Hinweise auf psychische Einschränkungen bestehen.\n"
 
-        st.text_area(
-            "Fertiger Bericht",
-            bericht,
-            height=700
-        ) 
+    if koerperlich:
+        bericht += "- Körperliche Einschränkungen wurden geschildert.\n"
+
+    if sucht:
+        bericht += "- Hinweise auf eine Suchterkrankung bzw. Alkoholproblematik bestehen.\n"
+
+    bericht += f"""
+
+Diagnosen / gesundheitliche Einschätzung:
+
+{diagnosen}
+
+Pflegegrad:
+{pflegegrad}
+
+Behandlungssituation:
+
+{arzt}
+
+--------------------------------------------------
+
+4. Zur praktischen Lebensbewältigung
+
+Die Wohnsituation wirkte bei dem Hausbesuch insgesamt: {wohnung_zustand}.
+
+"""
+
+    if post:
+        bericht += """
+Es zeigten sich ungeöffnete Schreiben sowie Hinweise auf Schwierigkeiten bei der eigenständigen Bearbeitung behördlicher Angelegenheiten.
+"""
+
+    if geld:
+        bericht += """
+Es bestehen Hinweise auf Unsicherheiten im Umgang mit finanziellen Angelegenheiten.
+"""
+
+    if arztmeidung:
+        bericht += """
+Eine ausreichende medizinische Anbindung besteht derzeit offenbar nicht.
+"""
+
+    bericht += f"""
+
+Weitere Beobachtungen zur Alltagsbewältigung:
+
+{alltag}
+
+--------------------------------------------------
+
+5. Einschätzung des Betreuungsbedarfs
+
+Bereits bestehende Hilfen:
+
+{hilfen}
+
+Aus fachlicher Sicht erscheinen folgende Aufgabenkreise erforderlich:
+
+"""
+
+    for punkt in betreuung:
+        bericht += f"- {punkt}\n"
+
+    bericht += f"""
+
+Weitere fachliche Einschätzung:
+
+{schluss}
+
+--------------------------------------------------
+
+Schlussbemerkung
+
+Aus den im Rahmen des Hausbesuchs gewonnenen Erkenntnissen ergibt sich, dass die betroffene Person derzeit nur eingeschränkt in der Lage erscheint, ihre Angelegenheiten eigenständig und ausreichend zu regeln.
+
+Eine rechtliche Betreuung erscheint aus fachlicher Sicht prüfenswert.
+
+"""
+
+    st.success("Sozialbericht erfolgreich erstellt")
+
+    st.text_area(
+        "Fertiger Bericht",
+        bericht,
+        height=900
+    ) 

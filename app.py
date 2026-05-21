@@ -1,105 +1,86 @@
-import streamlit as st
+# =====================================================
+# SOZIALBERICHT – OFFIZIELLE GLIEDERUNG
+# =====================================================
 
-st.set_page_config(page_title="Sozialbericht", layout="wide")
+import streamlit as st
+from datetime import date
+
+st.set_page_config(
+    page_title="Sozialbericht",
+    layout="wide"
+)
 
 # =====================================================
 # DATENSPEICHER
 # =====================================================
 
-if "daten" not in st.session_state:
-    st.session_state.daten = {}
-
-d = st.session_state.daten
+if "bericht" not in st.session_state:
+    st.session_state.bericht = ""
 
 # =====================================================
 # SIDEBAR
 # =====================================================
 
-st.sidebar.title("Bereiche")
+st.sidebar.title("Gliederung")
 
-seite = st.sidebar.radio(
-    "Navigation",
+auswahl = st.sidebar.radio(
+    "Bereiche",
     [
-        "Gespräch / Hausbesuch",
-        "Soziale Situation",
-        "Wohn- und Lebensverhältnisse",
-        "Familiäre Situation",
-        "Finanzielle Situation",
-        "Gesundheitliche Situation",
-        "Beobachtungen beim Hausbesuch",
-        "Defizite / Betreuungsbedarf",
-        "Hilfen",
+        "1. Zur sozialen Situation",
+        "2. Zur finanziellen Situation",
+        "3. Gesundheitliche Situation",
+        "4. Zur praktischen Lebensbewältigung",
+        "5. Vorsorge",
+        "6. Mögliche Aufgabenkreise",
+        "7. Einrichtung einer Betreuung",
+        "8. Zur Person des Betreuers",
+        "9. Hinweise für das gerichtliche Verfahren",
+        "10. Grundlagen der Datenerhebung",
         "Bericht"
     ]
 )
 
+st.title("Sozialbericht")
+
 # =====================================================
-# GESPRÄCH
+# 1. SOZIALE SITUATION
 # =====================================================
 
-if seite == "Gespräch / Hausbesuch":
+if auswahl == "1. Zur sozialen Situation":
 
-    st.header("Gespräch / Hausbesuch")
+    st.header("1. Zur sozialen Situation")
 
-    d["datum"] = st.date_input("Datum")
-
-    d["ort"] = st.selectbox(
-        "Art des Gesprächs",
-        [
-            "Hausbesuch",
-            "Behördengespräch",
-            "Klinik",
-            "Pflegeheim",
-            "telefonisch"
-        ]
+    st.subheader(
+        "Biografie, Ausbildung und beruflicher Werdegang"
     )
 
-    d["teilnehmer"] = st.text_area(
-        "Weitere Gesprächsteilnehmer / Kontaktdaten",
-        d.get("teilnehmer", "")
+    beruf = st.text_input(
+        "Ausbildung / Beruf"
     )
 
-# =====================================================
-# SOZIALE SITUATION
-# =====================================================
-
-elif seite == "Soziale Situation":
-
-    st.header("Soziale Situation")
-
-    d["beruf"] = st.selectbox(
-        "Berufliche Situation",
+    berufssituation = st.selectbox(
+        "Derzeitige Situation",
         [
             "",
             "EU-Rente",
             "Rente",
             "Bürgergeld",
             "ergänzende Grundsicherung",
-            "Grundsicherung",
             "arbeitslos",
+            "nicht erwerbstätig",
             "erwerbstätig"
         ]
     )
 
-    d["ausbildung"] = st.text_input(
-        "Ausbildung / Beruf",
-        d.get("ausbildung", "")
+    biografie = st.text_area(
+        "Weitere biografische Angaben"
     )
 
-    d["biografie"] = st.text_area(
-        "Weitere biografische Angaben",
-        d.get("biografie", "")
+    st.subheader(
+        "Wohn- und Lebensverhältnisse"
     )
 
-# =====================================================
-# WOHNEN
-# =====================================================
-
-elif seite == "Wohn- und Lebensverhältnisse":
-
-    st.header("Wohn- und Lebensverhältnisse")
-
-    d["wohnform"] = st.selectbox(
+    wohnform = st.selectbox(
         "Wohnform",
         [
             "",
@@ -107,39 +88,36 @@ elif seite == "Wohn- und Lebensverhältnisse":
             "2-Raum-Wohnung",
             "3-Raum-Wohnung",
             "Haus",
-            "Pflegeeinrichtung",
+            "Pflegeheim",
+            "betreutes Wohnen",
             "wohnungslos",
             "obdachlos"
         ]
     )
 
-    d["wohnstatus"] = st.selectbox(
+    wohnstatus = st.selectbox(
         "Wohnstatus",
         [
             "",
             "zur Miete",
             "Eigentum",
-            "betreutes Wohnen",
             "Notunterkunft"
         ]
     )
 
-    d["allein"] = st.checkbox("alleinlebend")
-
-    d["wohnen_text"] = st.text_area(
-        "Weitere Angaben",
-        d.get("wohnen_text", "")
+    alleinlebend = st.checkbox(
+        "alleinlebend"
     )
 
-# =====================================================
-# FAMILIE
-# =====================================================
+    wohnen_text = st.text_area(
+        "Weitere Angaben zu den Wohnverhältnissen"
+    )
 
-elif seite == "Familiäre Situation":
+    st.subheader(
+        "Familiäre Situation, Angehörige, Kontaktpersonen"
+    )
 
-    st.header("Familiäre und soziale Situation")
-
-    d["familienstand"] = st.selectbox(
+    familienstand = st.selectbox(
         "Familienstand",
         [
             "",
@@ -151,109 +129,79 @@ elif seite == "Familiäre Situation":
         ]
     )
 
-    d["kinder"] = st.checkbox("Kinder vorhanden")
-
-    d["angehoerige"] = st.checkbox(
-        "Angehörige vorhanden"
+    angehörige = st.text_area(
+        "Angehörige / Kontaktpersonen"
     )
 
-    d["unterstuetzung"] = st.checkbox(
-        "Angehörige unterstützen"
+    sozialkontakte = st.text_area(
+        "Soziale Kontakte"
     )
 
-    d["kein_kontakt"] = st.checkbox(
-        "kein Kontakt zu Angehörigen"
-    )
-
-    d["isolation"] = st.checkbox(
-        "soziale Isolation"
-    )
-
-    d["familie_text"] = st.text_area(
-        "Weitere Angaben",
-        d.get("familie_text", "")
+    sozial_isoliert = st.checkbox(
+        "wirkt sozial isoliert"
     )
 
 # =====================================================
-# FINANZEN
+# 2. FINANZEN
 # =====================================================
 
-elif seite == "Finanzielle Situation":
+elif auswahl == "2. Zur finanziellen Situation":
 
-    st.header("Finanzielle Situation")
+    st.header("2. Zur finanziellen Situation")
 
-    d["einkommen"] = st.selectbox(
-        "Leistungen / Einkommen",
-        [
-            "",
-            "Rente",
-            "EU-Rente",
-            "Bürgergeld",
-            "ergänzende Grundsicherung",
-            "Grundsicherung",
-            "Lohn / Gehalt"
-        ]
+    einkommen = st.text_input(
+        "Einkommen / Unterhalt / Rente"
     )
 
-    d["einkommen_hoehe"] = st.text_input(
-        "monatliche Höhe",
-        d.get("einkommen_hoehe", "")
+    ergänzende_grundsicherung = st.checkbox(
+        "ergänzende Grundsicherung"
     )
 
-    d["vermoegen"] = st.selectbox(
-        "Vermögen",
-        [
-            "",
-            "kein Vermögen",
-            "unter 10.000 Euro",
-            "über 10.000 Euro"
-        ]
+    einkommen_höhe = st.text_input(
+        "Höhe der Einkünfte"
     )
 
-    d["schulden"] = st.text_input(
-        "Schulden / offene Forderungen",
-        d.get("schulden", "")
+    vermögen = st.text_input(
+        "Vermögen"
     )
 
-    d["miete"] = st.text_input(
-        "monatliche Mietkosten",
-        d.get("miete", "")
+    schulden = st.text_area(
+        "Schulden / offene Forderungen"
+    )
+
+    verpflichtungen = st.text_input(
+        "laufende finanzielle Verpflichtungen"
     )
 
 # =====================================================
-# GESUNDHEIT
+# 3. GESUNDHEIT
 # =====================================================
 
-elif seite == "Gesundheitliche Situation":
+elif auswahl == "3. Gesundheitliche Situation":
 
-    st.header("Gesundheitliche Situation")
+    st.header("3. Gesundheitliche Situation")
 
-    d["psychisch"] = st.checkbox(
+    psychisch = st.checkbox(
         "psychische Erkrankung"
     )
 
-    d["demenz"] = st.checkbox(
-        "dementielle Veränderung"
+    geistig = st.checkbox(
+        "geistige oder seelische Beeinträchtigung"
     )
 
-    d["koerperlich"] = st.checkbox(
-        "körperliche Einschränkungen"
+    körperlich = st.checkbox(
+        "körperliche Beeinträchtigung"
     )
 
-    d["sucht"] = st.checkbox(
-        "Suchterkrankung / Alkoholproblematik"
+    eigene_angaben = st.text_area(
+        "Nach eigenen Angaben"
     )
 
-    d["krankheitseinsicht"] = st.checkbox(
-        "fehlende Krankheitseinsicht"
+    diagnosen = st.text_area(
+        "Diagnosen"
     )
 
-    d["diagnosen"] = st.text_area(
-        "Diagnosen / Beschwerden",
-        d.get("diagnosen", "")
-    )
-
-    d["pflegegrad"] = st.selectbox(
+    pflegegrad = st.selectbox(
         "Pflegegrad",
         [
             "",
@@ -266,504 +214,632 @@ elif seite == "Gesundheitliche Situation":
         ]
     )
 
+    schwerbehinderung = st.checkbox(
+        "Schwerbehinderung"
+    )
+
+    krankenkasse = st.text_input(
+        "Krankenkasse"
+    )
+
+    hausarzt = st.text_input(
+        "behandelnder Hausarzt"
+    )
+
+    fachärzte = st.text_input(
+        "behandelnde Fachärzte"
+    )
+
 # =====================================================
-# HAUSBESUCH
+# 4. PRAKTISCHE LEBENSBEWÄLTIGUNG
 # =====================================================
 
-elif seite == "Beobachtungen beim Hausbesuch":
+elif auswahl == "4. Zur praktischen Lebensbewältigung":
 
-    st.header("Beobachtungen beim Hausbesuch")
+    st.header(
+        "4. Zur praktischen Lebensbewältigung"
+    )
 
-    d["wohnung_unordentlich"] = st.checkbox(
+    st.subheader(
+        "Folgende Defizite bei der Wahrnehmung eigener Angelegenheiten bestehen"
+    )
+
+    wohnung_unordentlich = st.checkbox(
         "Wohnung unordentlich"
     )
 
-    d["verwahrlosung"] = st.checkbox(
-        "Verwahrlosungstendenzen"
+    post_ungeöffnet = st.checkbox(
+        "ungeöffnete Post"
     )
 
-    d["post"] = st.checkbox(
-        "ungeöffnete Post vorhanden"
+    finanzen_problem = st.checkbox(
+        "Überforderung mit finanziellen Angelegenheiten"
     )
 
-    d["hausbesuch_text"] = st.text_area(
-        "Weitere Beobachtungen",
-        d.get("hausbesuch_text", "")
+    krankheitseinsicht = st.checkbox(
+        "fehlende Krankheitseinsicht"
     )
 
-# =====================================================
-# BETREUUNGSBEDARF
-# =====================================================
-
-elif seite == "Defizite / Betreuungsbedarf":
-
-    st.header("Defizite / Betreuungsbedarf")
-
-    d["finanzen_problem"] = st.checkbox(
-        "Probleme bei finanziellen Angelegenheiten"
+    orientierung = st.checkbox(
+        "Orientierungsprobleme"
     )
 
-    d["post_problem"] = st.checkbox(
-        "Probleme mit Behördenangelegenheiten / Post"
+    mobilität = st.checkbox(
+        "Mobilität eingeschränkt"
     )
 
-    d["gesundheit_problem"] = st.checkbox(
-        "fehlende Gesundheitsfürsorge"
-    )
-
-    d["betreuung"] = st.checkbox(
-        "rechtliche Betreuung erforderlich"
-    )
-
-    d["bedarf_text"] = st.text_area(
-        "Weitere Angaben",
-        d.get("bedarf_text", "")
+    beobachtungen = st.text_area(
+        "Weitere Beobachtungen beim Hausbesuch"
     )
 
 # =====================================================
-# HILFEN
+# 5. VORSORGE
 # =====================================================
 
-elif seite == "Hilfen":
+elif auswahl == "5. Vorsorge":
 
-    st.header("Bereits vorhandene Hilfen")
+    st.header("5. Vorsorge")
 
-    d["hilfen"] = st.text_area(
-        "Hilfen / Unterstützungsangebote",
-        d.get("hilfen", "")
+    vorsorgevollmacht = st.checkbox(
+        "Vorsorgevollmacht"
     )
 
-    d["hilfen_reichen_nicht"] = st.text_area(
-        "Warum reichen die Hilfen nicht aus?",
-        d.get("hilfen_reichen_nicht", "")
+    betreuungsverfügung = st.checkbox(
+        "Betreuungsverfügung"
+    )
+
+    patientenverfügung = st.checkbox(
+        "Patientenverfügung"
+    )
+
+# =====================================================
+# 6. AUFGABENKREISE
+# =====================================================
+
+elif auswahl == "6. Mögliche Aufgabenkreise":
+
+    st.header(
+        "6. Mögliche Aufgabenkreise"
+    )
+
+    vermögenssorge = st.checkbox(
+        "Vermögenssorge"
+    )
+
+    wohnungsangelegenheiten = st.checkbox(
+        "Wohnungsangelegenheiten"
+    )
+
+    gesundheitssorge = st.checkbox(
+        "Gesundheitssorge / Heilbehandlung"
+    )
+
+    aufenthalt = st.checkbox(
+        "Aufenthaltsbestimmung"
+    )
+
+    postangelegenheiten = st.checkbox(
+        "Postangelegenheiten"
+    )
+
+    behörden = st.checkbox(
+        "Vertretung gegenüber Behörden"
+    )
+
+# =====================================================
+# 7. EINRICHTUNG BETREUUNG
+# =====================================================
+
+elif auswahl == "7. Einrichtung einer Betreuung":
+
+    st.header(
+        "7. Einrichtung einer Betreuung"
+    )
+
+    einverstanden = st.selectbox(
+        "Die betroffene Person ist",
+        [
+            "",
+            "mit der Betreuung einverstanden",
+            "mit der Betreuung nicht einverstanden",
+            "nicht in der Lage sich zu äußern"
+        ]
+    )
+
+# =====================================================
+# 8. BETREUER
+# =====================================================
+
+elif auswahl == "8. Zur Person des Betreuers":
+
+    st.header(
+        "8. Zur Person des Betreuers"
+    )
+
+    betreuer = st.text_input(
+        "Vorschlag / Wunschbetreuer"
+    )
+
+# =====================================================
+# 9. GERICHT
+# =====================================================
+
+elif auswahl == "9. Hinweise für das gerichtliche Verfahren":
+
+    st.header(
+        "9. Hinweise für das gerichtliche Verfahren"
+    )
+
+    anhörung = st.checkbox(
+        "Anhörung möglich"
+    )
+
+    verfahrenspfleger = st.checkbox(
+        "Verfahrenspfleger erforderlich"
+    )
+
+    schlussbemerkung = st.text_area(
+        "Weitere Hinweise"
+    )
+
+# =====================================================
+# 10. DATENGRUNDLAGE
+# =====================================================
+
+elif auswahl == "10. Grundlagen der Datenerhebung":
+
+    st.header(
+        "10. Grundlagen der Datenerhebung"
+    )
+
+    daten_betroffene = st.checkbox(
+        "Betroffene selbst"
+    )
+
+    daten_angehörige = st.checkbox(
+        "Angehörige"
+    )
+
+    daten_betreuung = st.checkbox(
+        "Bezugsbetreuung / Einrichtung"
+    )
+
+    daten_aktenlage = st.checkbox(
+        "Aktenlage"
     )
 
 # =====================================================
 # BERICHT
 # =====================================================
 
-elif seite == "Bericht":
+elif auswahl == "Bericht":
 
-    st.header("Sozialbericht")
+    st.header("Fertiger Bericht")
 
     if st.button("Bericht generieren"):
 
         bericht = ""
 
         # =================================================
-        # GESPRÄCH
+        # 1 SOZIALE SITUATION
         # =================================================
 
-        bericht += f"""
-Das Gespräch fand im Rahmen eines {d.get('ort')}s statt.
-"""
+        bericht += (
+            "1. Zur sozialen Situation\n\n"
+        )
 
-        if d.get("teilnehmer"):
-            bericht += f"""
+        if berufssituation:
+            bericht += (
+                f"Die Betroffene sei derzeit "
+                f"{berufssituation}.\n\n"
+            )
 
-An dem Gespräch nahmen zusätzlich folgende Personen teil:
+        if beruf:
+            bericht += (
+                f"Die Betroffene habe im Bereich "
+                f"{beruf} gearbeitet bzw. eine "
+                f"entsprechende Ausbildung "
+                f"absolviert.\n\n"
+            )
 
-{d.get('teilnehmer')}
-"""
-
-        # =================================================
-        # SOZIALE SITUATION
-        # =================================================
-
-        bericht += """
-
-
-
-1. Zur sozialen Situation
-"""
-
-        beruf = d.get("beruf", "")
-
-        if beruf == "EU-Rente":
-            bericht += """
-Die Betroffene sei EU-Rentnerin.
-"""
-
-        elif beruf == "Rente":
-            bericht += """
-Die Betroffene befinde sich im Rentenbezug.
-"""
-
-        elif beruf == "Bürgergeld":
-            bericht += """
-Die Betroffene erhalte Leistungen nach dem SGB II.
-"""
-
-        elif beruf == "ergänzende Grundsicherung":
-            bericht += """
-Die Betroffene erhalte ergänzende Grundsicherungsleistungen.
-"""
-
-        elif beruf == "Grundsicherung":
-            bericht += """
-Die Betroffene erhalte Grundsicherungsleistungen.
-"""
-
-        elif beruf == "arbeitslos":
-            bericht += """
-Die Betroffene sei derzeit arbeitslos.
-"""
-
-        elif beruf == "erwerbstätig":
-            bericht += """
-Die Betroffene gehe derzeit einer Erwerbstätigkeit nach.
-"""
-
-        if d.get("ausbildung"):
-            bericht += f"""
-
-Die Betroffene habe im Bereich {d.get('ausbildung')} gearbeitet bzw. eine entsprechende Ausbildung absolviert.
-"""
-
-        if d.get("biografie"):
-            bericht += f"""
-
-{d.get('biografie')}
-"""
-
-        # =================================================
-        # WOHNEN
-        # =================================================
-
-        bericht += """
-
-
-
-2. Wohn- und Lebensverhältnisse
-"""
+        if biografie:
+            bericht += f"{biografie}\n\n"
 
         wohnsatz = "Die Betroffene lebe "
 
-        if d.get("allein"):
+        if alleinlebend:
             wohnsatz += "allein "
 
-        if d.get("wohnstatus") == "zur Miete":
-            wohnsatz += "zur Miete "
+        if wohnstatus:
+            wohnsatz += f"{wohnstatus} "
 
-        elif d.get("wohnstatus") == "Eigentum":
-            wohnsatz += "in eigenem Wohnraum "
+        if wohnform:
+            wohnsatz += f"in einer {wohnform}"
 
-        elif d.get("wohnstatus") == "betreutes Wohnen":
-            wohnsatz += "im betreuten Wohnen "
+        wohnsatz += "."
 
-        elif d.get("wohnstatus") == "Notunterkunft":
-            wohnsatz += "in einer Notunterkunft "
+        bericht += wohnsatz + "\n\n"
 
-        if d.get("wohnform"):
-            wohnsatz += f"in einer {d.get('wohnform')}."
+        if wohnen_text:
+            bericht += (
+                f"{wohnen_text}\n\n"
+            )
 
-        bericht += wohnsatz
+        if familienstand:
+            bericht += (
+                f"Die Betroffene sei "
+                f"{familienstand}.\n\n"
+            )
 
-        if d.get("wohnen_text"):
-            bericht += f"""
+        if angehörige:
+            bericht += (
+                f"{angehörige}\n\n"
+            )
 
-{d.get('wohnen_text')}
-"""
+        if sozialkontakte:
+            bericht += (
+                f"{sozialkontakte}\n\n"
+            )
 
-        # =================================================
-        # FAMILIE
-        # =================================================
-
-        bericht += """
-
-
-
-3. Familiäre und soziale Situation
-"""
-
-        familienstand = d.get("familienstand")
-
-        if familienstand == "ledig":
-            bericht += """
-Die Betroffene sei ledig.
-"""
-
-        elif familienstand == "verheiratet":
-            bericht += """
-Die Betroffene sei verheiratet.
-"""
-
-        elif familienstand == "geschieden":
-            bericht += """
-Die Betroffene sei geschieden.
-"""
-
-        elif familienstand == "verwitwet":
-            bericht += """
-Die Betroffene sei verwitwet.
-"""
-
-        elif familienstand == "getrennt lebend":
-            bericht += """
-Die Betroffene lebe getrennt.
-"""
-
-        if d.get("kinder"):
-            bericht += """
-Kinder seien vorhanden.
-"""
-
-        if d.get("angehoerige"):
-            bericht += """
-Angehörige seien vorhanden.
-"""
-
-        if d.get("unterstuetzung"):
-            bericht += """
-Angehörige unterstützten die Betroffene teilweise im Alltag.
-"""
-
-        if d.get("kein_kontakt"):
-            bericht += """
-Ein regelmäßiger Kontakt zu Angehörigen bestehe derzeit nicht.
-"""
-
-        if d.get("isolation"):
-            bericht += """
-Die Betroffene wirke insgesamt sozial isoliert.
-"""
-
-        if d.get("familie_text"):
-            bericht += f"""
-
-{d.get('familie_text')}
-"""
+        if sozial_isoliert:
+            bericht += (
+                "Die Betroffene wirkte "
+                "insgesamt sozial isoliert.\n\n"
+            )
 
         # =================================================
-        # FINANZEN
+        # 2 FINANZEN
         # =================================================
 
-        bericht += """
-
-
-
-4. Zur finanziellen Situation
-"""
-
-        einkommen = d.get("einkommen", "")
-        hoehe = d.get("einkommen_hoehe", "")
+        bericht += (
+            "2. Zur finanziellen Situation\n\n"
+        )
 
         if einkommen:
 
-            if einkommen == "Rente":
-
-                if hoehe:
-                    bericht += f"""
-Die Betroffene beziehe eine Rente in Höhe von ca. {hoehe} Euro monatlich.
-"""
-                else:
-                    bericht += """
-Die Betroffene beziehe eine Rente.
-"""
-
-            elif einkommen == "EU-Rente":
-
-                if hoehe:
-                    bericht += f"""
-Die Betroffene beziehe eine EU-Rente in Höhe von ca. {hoehe} Euro monatlich.
-"""
-                else:
-                    bericht += """
-Die Betroffene beziehe eine EU-Rente.
-"""
-
-            elif einkommen == "Bürgergeld":
-
-                if hoehe:
-                    bericht += f"""
-Die Betroffene erhalte Leistungen nach dem SGB II in Höhe von ca. {hoehe} Euro monatlich.
-"""
-
-            elif einkommen == "Grundsicherung":
-
-                if hoehe:
-                    bericht += f"""
-Die Betroffene erhalte Grundsicherungsleistungen in Höhe von ca. {hoehe} Euro monatlich.
-"""
-
-            elif einkommen == "ergänzende Grundsicherung":
-
-                if hoehe:
-                    bericht += f"""
-Die Betroffene erhalte ergänzende Grundsicherungsleistungen in Höhe von ca. {hoehe} Euro monatlich.
-"""
-
-        if d.get("vermoegen") == "kein Vermögen":
-            bericht += """
-Vermögen sei nach eigenen Angaben nicht vorhanden.
-"""
-
-        elif d.get("vermoegen"):
-            bericht += f"""
-Das vorhandene Vermögen liege {d.get('vermoegen')}.
-"""
-
-        if d.get("schulden"):
-            bericht += f"""
-Es bestünden Schulden bzw. offene Forderungen in Höhe von ca. {d.get('schulden')}.
-"""
-
-        if d.get("miete"):
-            bericht += f"""
-Die monatlichen Mietkosten beliefen sich auf ca. {d.get('miete')} Euro.
-"""
-
-        # =================================================
-        # GESUNDHEIT
-        # =================================================
-
-        bericht += """
-
-
-
-5. Zur gesundheitlichen Situation
-"""
-
-        if d.get("psychisch"):
-            bericht += """
-Hinweise auf psychische Einschränkungen lägen vor.
-"""
-
-        if d.get("demenz"):
-            bericht += """
-Hinweise auf dementielle Veränderungen lägen vor.
-"""
-
-        if d.get("koerperlich"):
-            bericht += """
-Zudem lägen körperliche Einschränkungen vor.
-"""
-
-        if d.get("sucht"):
-            bericht += """
-Weiterhin bestünden Hinweise auf eine Suchterkrankung bzw. Alkoholproblematik.
-"""
-
-        if d.get("krankheitseinsicht"):
-            bericht += """
-Eine ausreichende Krankheitseinsicht bestehe offenbar nicht.
-"""
-
-        if d.get("diagnosen"):
-            bericht += f"""
-
-Die Betroffene berichte über folgende Beschwerden bzw. Diagnosen:
-
-{d.get('diagnosen')}
-"""
-
-        if d.get("pflegegrad"):
-
-            if d.get("pflegegrad") == "kein Pflegegrad":
-                bericht += """
-Ein Pflegegrad liege derzeit nicht vor.
-"""
+            if einkommen_höhe:
+                bericht += (
+                    f"Die Betroffene beziehe "
+                    f"{einkommen} in Höhe von "
+                    f"ca. {einkommen_höhe} "
+                    f"monatlich.\n\n"
+                )
 
             else:
-                bericht += f"""
-Es liege {d.get('pflegegrad')} vor.
-"""
+                bericht += (
+                    f"Die Betroffene beziehe "
+                    f"{einkommen}.\n\n"
+                )
+
+        if ergänzende_grundsicherung:
+            bericht += (
+                "Zudem werde ergänzende "
+                "Grundsicherung bezogen.\n\n"
+            )
+
+        if vermögen:
+            bericht += (
+                f"Vermögen sei in Form von "
+                f"{vermögen} vorhanden.\n\n"
+            )
+
+        if schulden:
+            bericht += (
+                f"Es bestünden folgende "
+                f"Schulden bzw. offene "
+                f"Forderungen: "
+                f"{schulden}\n\n"
+            )
+
+        if verpflichtungen:
+            bericht += (
+                f"Laufende finanzielle "
+                f"Verpflichtungen bestünden "
+                f"für "
+                f"{verpflichtungen}.\n\n"
+            )
 
         # =================================================
-        # HAUSBESUCH
+        # 3 GESUNDHEIT
         # =================================================
 
-        bericht += """
+        bericht += (
+            "3. Gesundheitliche Situation\n\n"
+        )
 
+        if psychisch:
+            bericht += (
+                "Hinweise auf psychische "
+                "Erkrankungen lagen vor.\n\n"
+            )
 
+        if geistig:
+            bericht += (
+                "Es zeigten sich geistige "
+                "bzw. seelische "
+                "Beeinträchtigungen.\n\n"
+            )
 
-6. Beobachtungen beim Hausbesuch
-"""
+        if körperlich:
+            bericht += (
+                "Zudem lagen körperliche "
+                "Beeinträchtigungen vor.\n\n"
+            )
 
-        if d.get("wohnung_unordentlich"):
-            bericht += """
-Im Rahmen des Hausbesuchs hat sich die Wohnsituation insgesamt als unordentlich dargestellt.
-"""
+        if eigene_angaben:
+            bericht += (
+                f"Nach eigenen Angaben "
+                f"bestünden folgende "
+                f"gesundheitliche "
+                f"Beschwerden: "
+                f"{eigene_angaben}\n\n"
+            )
 
-        if d.get("verwahrlosung"):
-            bericht += """
-Es haben sich Hinweise auf Verwahrlosungstendenzen gezeigt.
-"""
+        if diagnosen:
+            bericht += (
+                f"Folgende Diagnosen seien "
+                f"bekannt: "
+                f"{diagnosen}\n\n"
+            )
 
-        if d.get("post"):
-            bericht += """
-Es haben sich ungeöffnete Schreiben sowie Postrückstände gezeigt.
-"""
+        if pflegegrad:
+            if pflegegrad != "kein Pflegegrad":
+                bericht += (
+                    f"Es liege "
+                    f"{pflegegrad} vor.\n\n"
+                )
 
-        if d.get("hausbesuch_text"):
-            bericht += f"""
+        if schwerbehinderung:
+            bericht += (
+                "Eine Schwerbehinderung "
+                "liege vor.\n\n"
+            )
 
-{d.get('hausbesuch_text')}
-"""
+        if krankenkasse:
+            bericht += (
+                f"Die Betroffene sei bei der "
+                f"{krankenkasse} "
+                f"krankenversichert.\n\n"
+            )
+
+        if hausarzt:
+            bericht += (
+                f"Hausärztlich werde die "
+                f"Betroffene durch "
+                f"{hausarzt} betreut.\n\n"
+            )
+
+        if fachärzte:
+            bericht += (
+                f"Zusätzlich erfolge eine "
+                f"fachärztliche Behandlung "
+                f"durch "
+                f"{fachärzte}.\n\n"
+            )
 
         # =================================================
-        # BETREUUNGSBEDARF
+        # 4 LEBENSBEWÄLTIGUNG
         # =================================================
 
-        bericht += """
+        bericht += (
+            "4. Zur praktischen "
+            "Lebensbewältigung\n\n"
+        )
 
+        if wohnung_unordentlich:
+            bericht += (
+                "Im Rahmen des Hausbesuchs "
+                "stellte sich die Wohnung "
+                "insgesamt als "
+                "unordentlich dar.\n\n"
+            )
 
+        if post_ungeöffnet:
+            bericht += (
+                "Es zeigten sich "
+                "ungeöffnete Schreiben "
+                "sowie Postrückstände.\n\n"
+            )
 
-7. Defizite / Betreuungsbedarf
-"""
+        if finanzen_problem:
+            bericht += (
+                "Im Umgang mit finanziellen "
+                "Angelegenheiten wirkte die "
+                "Betroffene teilweise "
+                "überfordert.\n\n"
+            )
 
-        if d.get("finanzen_problem"):
-            bericht += """
-Im Umgang mit finanziellen Angelegenheiten wirkte die Betroffene teilweise überfordert.
-"""
+        if krankheitseinsicht:
+            bericht += (
+                "Eine ausreichende "
+                "Krankheitseinsicht "
+                "bestand offenbar nicht.\n\n"
+            )
 
-        if d.get("post_problem"):
-            bericht += """
-Es bestünden Einschränkungen bei der Bearbeitung behördlicher Angelegenheiten.
-"""
+        if orientierung:
+            bericht += (
+                "Es zeigten sich "
+                "Orientierungsprobleme.\n\n"
+            )
 
-        if d.get("gesundheit_problem"):
-            bericht += """
-Eine ausreichende gesundheitliche Selbstfürsorge erscheine derzeit nicht gewährleistet.
-"""
+        if mobilität:
+            bericht += (
+                "Die Mobilität erschien "
+                "eingeschränkt.\n\n"
+            )
 
-        if d.get("bedarf_text"):
-            bericht += f"""
-
-{d.get('bedarf_text')}
-"""
-
-        if d.get("betreuung"):
-            bericht += """
-Die Einrichtung einer rechtlichen Betreuung erscheine aus fachlicher Sicht weiterhin erforderlich.
-"""
+        if beobachtungen:
+            bericht += (
+                f"{beobachtungen}\n\n"
+            )
 
         # =================================================
-        # HILFEN
+        # 5 VORSORGE
         # =================================================
 
-        bericht += """
+        bericht += (
+            "5. Vorsorge\n\n"
+        )
 
+        if vorsorgevollmacht:
+            bericht += (
+                "Eine Vorsorgevollmacht "
+                "liege vor.\n\n"
+            )
 
+        if betreuungsverfügung:
+            bericht += (
+                "Eine Betreuungsverfügung "
+                "liege vor.\n\n"
+            )
 
-8. Bereits vorhandene Hilfen
-"""
+        if patientenverfügung:
+            bericht += (
+                "Eine Patientenverfügung "
+                "liege vor.\n\n"
+            )
 
-        if d.get("hilfen"):
-            bericht += f"""
-Derzeit bestünden folgende Hilfen bzw. Unterstützungsangebote:
+        # =================================================
+        # 6 AUFGABENKREISE
+        # =================================================
 
-{d.get('hilfen')}
-"""
+        bericht += (
+            "6. Mögliche Aufgabenkreise\n\n"
+        )
 
-        if d.get("hilfen_reichen_nicht"):
-            bericht += f"""
+        aufgaben = []
 
-{d.get('hilfen_reichen_nicht')}
-"""
+        if vermögenssorge:
+            aufgaben.append(
+                "Vermögenssorge"
+            )
+
+        if wohnungsangelegenheiten:
+            aufgaben.append(
+                "Wohnungsangelegenheiten"
+            )
+
+        if gesundheitssorge:
+            aufgaben.append(
+                "Gesundheitssorge"
+            )
+
+        if aufenthalt:
+            aufgaben.append(
+                "Aufenthaltsbestimmung"
+            )
+
+        if postangelegenheiten:
+            aufgaben.append(
+                "Postangelegenheiten"
+            )
+
+        if behörden:
+            aufgaben.append(
+                "Vertretung gegenüber Behörden"
+            )
+
+        if aufgaben:
+            bericht += (
+                ", ".join(aufgaben)
+                + ".\n\n"
+            )
+
+        # =================================================
+        # 7 BETREUUNG
+        # =================================================
+
+        bericht += (
+            "7. Einrichtung einer Betreuung\n\n"
+        )
+
+        if einverstanden:
+            bericht += (
+                f"Die Betroffene sei "
+                f"{einverstanden}.\n\n"
+            )
+
+        # =================================================
+        # 8 BETREUER
+        # =================================================
+
+        bericht += (
+            "8. Zur Person des Betreuers\n\n"
+        )
+
+        if betreuer:
+            bericht += (
+                f"Als Betreuungsperson "
+                f"werde vorgeschlagen: "
+                f"{betreuer}\n\n"
+            )
+
+        # =================================================
+        # 9 GERICHT
+        # =================================================
+
+        bericht += (
+            "9. Hinweise für das "
+            "gerichtliche Verfahren\n\n"
+        )
+
+        if anhörung:
+            bericht += (
+                "Eine Anhörung erscheine "
+                "möglich.\n\n"
+            )
+
+        if verfahrenspfleger:
+            bericht += (
+                "Die Bestellung eines "
+                "Verfahrenspflegers "
+                "erscheine erforderlich.\n\n"
+            )
+
+        if schlussbemerkung:
+            bericht += (
+                f"{schlussbemerkung}\n\n"
+            )
+
+        # =================================================
+        # 10 DATEN
+        # =================================================
+
+        bericht += (
+            "10. Grundlagen der "
+            "Datenerhebung\n\n"
+        )
+
+        daten = []
+
+        if daten_betroffene:
+            daten.append(
+                "Betroffene selbst"
+            )
+
+        if daten_angehörige:
+            daten.append(
+                "Angehörige"
+            )
+
+        if daten_betreuung:
+            daten.append(
+                "Bezugsbetreuung / Einrichtung"
+            )
+
+        if daten_aktenlage:
+            daten.append(
+                "Aktenlage"
+            )
+
+        if daten:
+            bericht += (
+                ", ".join(daten)
+                + ".\n\n"
+            )
 
         st.text_area(
             "Fertiger Bericht",
             bericht,
-            height=1400
+            height=1200
         ) 

@@ -1,5 +1,7 @@
 import streamlit as st
 
+# SESSION STATE
+
 if "beruf" not in st.session_state:
     st.session_state.beruf = ""
 
@@ -18,79 +20,161 @@ if "wohntext" not in st.session_state:
 if "familie" not in st.session_state:
     st.session_state.familie = ""
 
-st.set_page_config(page_title="Sozialbericht-Assistent")
 
-st.title("Sozialbericht-Assistent")
+# SEITE
 
-st.header("1. Zur sozialen Situation")
+st.set_page_config(
+    page_title="Sozialbericht-Assistent",
+    layout="wide"
+)
 
-st.subheader("Biografie, Ausbildung und beruflicher Werdegang")
+st.title("🧾 Sozialbericht-Assistent")
 
-beruf = st.selectbox(
-    "Berufliche Situation",
+st.markdown("---")
+
+
+# SIDEBAR
+
+st.sidebar.title("Bereiche")
+
+bereich = st.sidebar.radio(
+    "Navigation",
     [
-        "Rentner/in",
-        "arbeitslos",
-        "erwerbstätig",
-        "EU-Rente",
-        "Grundsicherung",
-        "sonstige"
+        "Soziale Situation",
+        "Wohnsituation",
+        "Familiäre Situation",
+        "Bericht"
     ]
 )
 
-biografie = st.text_area(
-    "Weitere Angaben",
-    height=100
-)
 
-st.subheader("Wohn- und Lebensverhältnisse")
+# SOZIALE SITUATION
 
-wohnung = st.selectbox(
-    "Wohnsituation",
-    [
-        "1-Raum-Wohnung",
-        "2-Raum-Wohnung",
-        "betreutes Wohnen",
-        "Pflegeheim",
-        "Wohngemeinschaft",
-        "sonstige"
-    ]
-)
+if bereich == "Soziale Situation":
 
-lebt = st.selectbox(
-    "Lebt die Person allein?",
-    [
-        "alleinlebend",
-        "mit Angehörigen",
-        "mit Partner/in",
-        "mit Mitbewohnern"
-    ]
-)
+    st.header("Biografie und beruflicher Werdegang")
 
-st.subheader("Familiäre Situation")
-
-familie = st.text_area(
-    "Angehörige / Unterstützung",
-    height=120
-)
-
-if st.button("Bericht erstellen"):
-
-    text = f"""
-Biografie, Ausbildung und beruflicher Werdegang:
-Die betroffene Person ist derzeit {beruf}. {biografie}
-
-Wohn- und Lebensverhältnisse:
-Die betroffene Person lebt in einer {wohnung} und ist {lebt}.
-
-Familiäre Situation, nächste Angehörige, Kontaktpersonen:
-{familie}
-"""
-
-    st.success("Bericht erstellt")
+    st.selectbox(
+        "Berufliche Situation",
+        [
+            "Rentner/in",
+            "arbeitslos",
+            "erwerbstätig",
+            "EU-Rente",
+            "Grundsicherung",
+            "sonstige"
+        ],
+        key="beruf"
+    )
 
     st.text_area(
-        "Fertiger Bericht",
-        text,
-        height=300
-    ) #test 
+        "Biografische Angaben",
+        height=250,
+        placeholder="z.B. Ausbildung, frühere Tätigkeit, gesundheitliche Entwicklung ...",
+        key="biografie"
+    )
+
+
+# WOHNSITUATION
+
+elif bereich == "Wohnsituation":
+
+    st.header("Wohn- und Lebensverhältnisse")
+
+    st.selectbox(
+        "Wohnform",
+        [
+            "1-Raum-Wohnung",
+            "2-Raum-Wohnung",
+            "betreutes Wohnen",
+            "Pflegeheim",
+            "Wohngemeinschaft"
+        ],
+        key="wohnung"
+    )
+
+    st.selectbox(
+        "Lebenssituation",
+        [
+            "alleinlebend",
+            "mit Angehörigen",
+            "mit Partner/in",
+            "mit Mitbewohnern"
+        ],
+        key="lebt"
+    )
+
+    st.text_area(
+        "Weitere Angaben",
+        height=250,
+        placeholder="z.B. Zustand der Wohnung, Versorgung, Haushaltsführung ...",
+        key="wohntext"
+    )
+
+
+# FAMILIE
+
+elif bereich == "Familiäre Situation":
+
+    st.header("Angehörige / Unterstützung")
+
+    st.text_area(
+        "Familiäre Situation",
+        height=300,
+        placeholder="z.B. Angehörige, Kontaktpersonen, Unterstützungssystem ...",
+        key="familie"
+    )
+
+
+# BERICHT
+
+elif bereich == "Bericht":
+
+    st.header("Bericht erstellen")
+
+    if st.button("Bericht generieren"):
+
+        bericht = f"""
+SOZIALBERICHT
+
+
+1. Biografie und beruflicher Werdegang
+
+Die betroffene Person befindet sich derzeit in folgender beruflicher Situation:
+
+{st.session_state.beruf}
+
+Weitere biografische Angaben:
+
+{st.session_state.biografie}
+
+
+
+2. Wohn- und Lebensverhältnisse
+
+Die betroffene Person lebt derzeit in folgender Wohnform:
+
+{st.session_state.wohnung}
+
+Lebenssituation:
+
+{st.session_state.lebt}
+
+Weitere Angaben:
+
+{st.session_state.wohntext}
+
+
+
+3. Familiäre Situation
+
+{st.session_state.familie}
+"""
+
+        st.success("Bericht erstellt")
+
+        st.text_area(
+            "Fertiger Bericht",
+            bericht,
+            height=500
+        ) 

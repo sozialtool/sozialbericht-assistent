@@ -1,5 +1,23 @@
 import streamlit as st
 
+if "beruf" not in st.session_state:
+    st.session_state.beruf = ""
+
+if "biografie" not in st.session_state:
+    st.session_state.biografie = ""
+
+if "wohnung" not in st.session_state:
+    st.session_state.wohnung = ""
+
+if "lebt" not in st.session_state:
+    st.session_state.lebt = ""
+
+if "wohntext" not in st.session_state:
+    st.session_state.wohntext = ""
+
+if "familie" not in st.session_state:
+    st.session_state.familie = ""
+
 st.set_page_config(page_title="Sozialbericht-Assistent")
 
 st.title("Sozialbericht-Assistent")

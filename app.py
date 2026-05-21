@@ -4,311 +4,428 @@ st.set_page_config(page_title="Sozialbericht-Assistent", layout="wide")
 
 st.title("Sozialbericht-Assistent")
 
-# ---------------------------------------------------
-# STAMMDATEN
-# ---------------------------------------------------
+# =========================================================
+# SIDEBAR
+# =========================================================
 
-st.header("Stammdaten")
+st.sidebar.title("Bereiche")
 
-name = st.text_input("Name der betroffenen Person")
-geburt = st.text_input("Geburtsdatum")
-datum = st.date_input("Datum des Hausbesuchs")
+seite = st.sidebar.radio(
+    "Navigation",
+    [
+        "Soziale Situation",
+        "Finanzielle Situation",
+        "Gesundheit",
+        "Alltag / Hausbesuch",
+        "Betreuungsbedarf",
+        "Bericht"
+    ]
+)
 
-# ---------------------------------------------------
+# =========================================================
+# SESSION STATE
+# =========================================================
+
+if "daten" not in st.session_state:
+    st.session_state.daten = {}
+
+daten = st.session_state.daten
+
+# =========================================================
 # 1. SOZIALE SITUATION
-# ---------------------------------------------------
+# =========================================================
 
-st.header("1. Zur sozialen Situation")
+if seite == "Soziale Situation":
 
-beruf = st.selectbox(
-    "Berufliche Situation",
-    [
-        "arbeitslos",
-        "EU-Rente",
-        "Rentner/in",
-        "erwerbstätig",
-        "Grundsicherung",
-        "Bürgergeld",
-        "sonstige"
-    ]
-)
+    st.header("1. Zur sozialen Situation")
 
-ausbildung = st.text_input("Ausbildung / früherer Beruf")
+    daten["name"] = st.text_input(
+        "Name der betroffenen Person",
+        daten.get("name", "")
+    )
 
-biografie = st.text_area(
-    "Biografische Angaben",
-    height=120
-)
+    daten["geburt"] = st.text_input(
+        "Geburtsdatum",
+        daten.get("geburt", "")
+    )
 
-wohnung = st.selectbox(
-    "Wohnsituation",
-    [
-        "1-Raum-Wohnung",
-        "2-Raum-Wohnung",
-        "betreutes Wohnen",
-        "Pflegeheim",
-        "Wohnungslosigkeit",
-        "sonstige"
-    ]
-)
+    daten["datum"] = st.text_input(
+        "Datum des Hausbesuchs",
+        daten.get("datum", "")
+    )
 
-lebt = st.selectbox(
-    "Lebenssituation",
-    [
-        "alleinlebend",
-        "mit Angehörigen",
-        "mit Partner/in",
-        "mit Mitbewohnern"
-    ]
-)
+    daten["beruf"] = st.selectbox(
+        "Berufliche Situation",
+        [
+            "EU-Rente",
+            "arbeitslos",
+            "Bürgergeld",
+            "Rentner/in",
+            "erwerbstätig",
+            "Grundsicherung",
+            "sonstige"
+        ]
+    )
 
-familie = st.text_area(
-    "Angehörige / soziale Kontakte",
-    height=120
-)
+    daten["ausbildung"] = st.text_area(
+        "Ausbildung / Beruflicher Werdegang",
+        daten.get("ausbildung", "")
+    )
 
-# ---------------------------------------------------
-# 2. FINANZIELLE SITUATION
-# ---------------------------------------------------
+    daten["biografie"] = st.text_area(
+        "Weitere biografische Angaben",
+        daten.get("biografie", "")
+    )
 
-st.header("2. Finanzielle Situation")
+    daten["wohnung"] = st.text_input(
+        "Wohnform",
+        daten.get("wohnung", "1-Raum-Wohnung")
+    )
 
-einkommen = st.text_input("Einkommen / Leistungen")
+    daten["lebt"] = st.selectbox(
+        "Lebenssituation",
+        [
+            "alleinlebend",
+            "mit Angehörigen lebend",
+            "gemeinschaftlich wohnend"
+        ]
+    )
 
-schulden = st.text_area(
-    "Schulden / offene Forderungen",
-    height=120
-)
+    daten["familie"] = st.text_area(
+        "Familiäre Situation / Angehörige / Kontakte",
+        daten.get("familie", "")
+    )
 
-miete = st.text_input("Mietkosten")
+# =========================================================
+# 2. FINANZEN
+# =========================================================
 
-# ---------------------------------------------------
-# 3. GESUNDHEITLICHE SITUATION
-# ---------------------------------------------------
+elif seite == "Finanzielle Situation":
 
-st.header("3. Gesundheitliche Situation")
+    st.header("2. Zur finanziellen Situation")
 
-psychisch = st.checkbox("psychische Erkrankung")
-koerperlich = st.checkbox("körperliche Einschränkungen")
-sucht = st.checkbox("Suchterkrankung / Alkoholproblematik")
+    daten["einkommen"] = st.text_area(
+        "Einkommen / Leistungen",
+        daten.get("einkommen", "")
+    )
 
-diagnosen = st.text_area(
-    "Diagnosen / gesundheitliche Einschränkungen",
-    height=150
-)
+    daten["schulden"] = st.text_area(
+        "Schulden / offene Forderungen",
+        daten.get("schulden", "")
+    )
 
-pflegegrad = st.selectbox(
-    "Pflegegrad",
-    [
-        "kein Pflegegrad",
-        "Pflegegrad 1",
-        "Pflegegrad 2",
-        "Pflegegrad 3",
-        "Pflegegrad 4",
-        "Pflegegrad 5"
-    ]
-)
+    daten["miete"] = st.text_input(
+        "Mietkosten",
+        daten.get("miete", "")
+    )
 
-arzt = st.text_input("Hausarzt / Behandlungssituation")
+# =========================================================
+# 3. GESUNDHEIT
+# =========================================================
 
-# ---------------------------------------------------
-# 4. PRAKTISCHE LEBENSBEWÄLTIGUNG
-# ---------------------------------------------------
+elif seite == "Gesundheit":
 
-st.header("4. Praktische Lebensbewältigung")
+    st.header("3. Gesundheitliche Situation")
 
-wohnung_zustand = st.selectbox(
-    "Zustand der Wohnung",
-    [
-        "gepflegt",
-        "leicht unordentlich",
-        "deutlich verwahrlost",
-        "stark vermüllt"
-    ]
-)
+    daten["psychisch"] = st.checkbox(
+        "psychische Einschränkungen",
+        daten.get("psychisch", False)
+    )
 
-post = st.checkbox("ungeöffnete Post vorhanden")
-geld = st.checkbox("Probleme im Umgang mit Geld")
-arztmeidung = st.checkbox("fehlende Krankheitseinsicht / Arztmeidung")
+    daten["koerperlich"] = st.checkbox(
+        "körperliche Einschränkungen",
+        daten.get("koerperlich", False)
+    )
 
-alltag = st.text_area(
-    "Einschätzung der Alltagsbewältigung",
-    height=200
-)
+    daten["sucht"] = st.checkbox(
+        "Hinweise auf Suchterkrankung",
+        daten.get("sucht", False)
+    )
 
-# ---------------------------------------------------
+    daten["diagnosen"] = st.text_area(
+        "Diagnosen / Beschwerden",
+        daten.get("diagnosen", "")
+    )
+
+    daten["pflegegrad"] = st.selectbox(
+        "Pflegegrad",
+        [
+            "kein Pflegegrad",
+            "Pflegegrad 1",
+            "Pflegegrad 2",
+            "Pflegegrad 3",
+            "Pflegegrad 4",
+            "Pflegegrad 5"
+        ]
+    )
+
+    daten["arzt"] = st.text_area(
+        "Hausarzt / Behandlungssituation",
+        daten.get("arzt", "")
+    )
+
+# =========================================================
+# 4. ALLTAG
+# =========================================================
+
+elif seite == "Alltag / Hausbesuch":
+
+    st.header("4. Zur praktischen Lebensbewältigung")
+
+    daten["wohnung_zustand"] = st.selectbox(
+        "Zustand der Wohnung",
+        [
+            "geordnet",
+            "leicht unordentlich",
+            "deutlich verwahrlost",
+            "unsauber",
+            "vermüllt"
+        ]
+    )
+
+    daten["post"] = st.checkbox(
+        "ungeöffnete Post vorhanden",
+        daten.get("post", False)
+    )
+
+    daten["geld"] = st.checkbox(
+        "Probleme mit finanziellen Angelegenheiten",
+        daten.get("geld", False)
+    )
+
+    daten["arztmeidung"] = st.checkbox(
+        "fehlende ärztliche Anbindung",
+        daten.get("arztmeidung", False)
+    )
+
+    daten["alltag"] = st.text_area(
+        "Beschreibung des Hausbesuchs / Alltagssituation",
+        daten.get("alltag", "")
+    )
+
+# =========================================================
 # 5. BETREUUNGSBEDARF
-# ---------------------------------------------------
+# =========================================================
 
-st.header("5. Einschätzung des Betreuungsbedarfs")
+elif seite == "Betreuungsbedarf":
 
-hilfen = st.text_area(
-    "Bereits bestehende Hilfen",
-    height=120
-)
+    st.header("5. Betreuungsbedarf")
 
-betreuung = st.multiselect(
-    "Empfohlene Aufgabenkreise",
-    [
-        "Vermögenssorge",
-        "Wohnungsangelegenheiten",
-        "Gesundheitssorge",
-        "Behördenangelegenheiten",
-        "Postangelegenheiten",
-        "Vertretung gegenüber Institutionen"
-    ]
-)
+    daten["hilfen"] = st.text_area(
+        "Bestehende Hilfen",
+        daten.get("hilfen", "")
+    )
 
-schluss = st.text_area(
-    "Weitere fachliche Einschätzung",
-    height=180
-)
+    daten["betreuung"] = st.multiselect(
+        "Erforderliche Aufgabenkreise",
+        [
+            "Vermögenssorge",
+            "Wohnungsangelegenheiten",
+            "Gesundheitssorge",
+            "Behördenangelegenheiten",
+            "Postangelegenheiten",
+            "Aufenthaltsangelegenheiten"
+        ]
+    )
 
-# ---------------------------------------------------
-# BERICHT GENERIEREN
-# ---------------------------------------------------
+    daten["schluss"] = st.text_area(
+        "Fachliche Einschätzung",
+        daten.get("schluss", "")
+    )
 
-if st.button("Sozialbericht erstellen"):
+# =========================================================
+# BERICHT
+# =========================================================
 
-    bericht = f"""
+elif seite == "Bericht":
+
+    st.header("Sozialbericht erstellen")
+
+    if st.button("Bericht generieren"):
+
+        name = daten.get("name", "")
+        geburt = daten.get("geburt", "")
+        datum = daten.get("datum", "")
+
+        beruf = daten.get("beruf", "")
+        ausbildung = daten.get("ausbildung", "")
+        biografie = daten.get("biografie", "")
+        wohnung = daten.get("wohnung", "")
+        lebt = daten.get("lebt", "")
+        familie = daten.get("familie", "")
+
+        einkommen = daten.get("einkommen", "")
+        schulden = daten.get("schulden", "")
+        miete = daten.get("miete", "")
+
+        psychisch = daten.get("psychisch", False)
+        koerperlich = daten.get("koerperlich", False)
+        sucht = daten.get("sucht", False)
+
+        diagnosen = daten.get("diagnosen", "")
+        pflegegrad = daten.get("pflegegrad", "")
+        arzt = daten.get("arzt", "")
+
+        wohnung_zustand = daten.get("wohnung_zustand", "")
+        post = daten.get("post", False)
+        geld = daten.get("geld", False)
+        arztmeidung = daten.get("arztmeidung", False)
+        alltag = daten.get("alltag", "")
+
+        hilfen = daten.get("hilfen", "")
+        betreuung = daten.get("betreuung", [])
+        schluss = daten.get("schluss", "")
+
+        # =====================================================
+        # GESUNDHEITSTEXT
+        # =====================================================
+
+        gesundheit = ""
+
+        if psychisch:
+            gesundheit += "Es bestünden Hinweise auf psychische Einschränkungen. "
+
+        if koerperlich:
+            gesundheit += "Zudem lägen körperliche Einschränkungen vor. "
+
+        if sucht:
+            gesundheit += "Weiterhin bestünden Hinweise auf eine Alkohol- bzw. Suchterkrankung. "
+
+        gesundheit += f"""
+
+Die betroffene Person berichte über folgende Beschwerden bzw. Diagnosen:
+{diagnosen}
+
+Ein {pflegegrad} liege vor.
+
+Zur ärztlichen Versorgung sei bekannt:
+{arzt}
+"""
+
+        # =====================================================
+        # ALLTAG
+        # =====================================================
+
+        alltag_text = f"""
+Im Rahmen des Hausbesuchs habe sich die Wohnsituation insgesamt als {wohnung_zustand} dargestellt.
+"""
+
+        if post:
+            alltag_text += """
+Es hätten sich ungeöffnete Schreiben sowie Schwierigkeiten bei der Bearbeitung behördlicher Angelegenheiten gezeigt.
+"""
+
+        if geld:
+            alltag_text += """
+Die betroffene Person wirke im Umgang mit finanziellen Angelegenheiten teilweise unsicher bzw. überfordert.
+"""
+
+        if arztmeidung:
+            alltag_text += """
+Eine ausreichende medizinische Anbindung bestehe derzeit offenbar nicht.
+"""
+
+        alltag_text += f"""
+
+{alltag}
+"""
+
+        # =====================================================
+        # AUFGABEN
+        # =====================================================
+
+        aufgaben = ", ".join(betreuung)
+
+        # =====================================================
+        # BERICHT
+        # =====================================================
+
+        bericht = f"""
 SOZIALBERICHT
+
 
 Betroffene Person: {name}
 Geburtsdatum: {geburt}
 
 Hausbesuch vom: {datum}
 
---------------------------------------------------
+
+------------------------------------------------------------
 
 1. Zur sozialen Situation
 
-Biografie, Ausbildung und beruflicher Werdegang:
 
 Die betroffene Person befinde sich derzeit in folgender beruflicher Situation: {beruf}.
 
-Zur bisherigen beruflichen Entwicklung wurde angegeben:
-{ausbildung}
+Die betroffene Person habe eine Ausbildung bzw. berufliche Tätigkeit im Bereich {ausbildung} ausgeübt.
 
-Weitere biografische Angaben:
 {biografie}
-
-Wohn- und Lebensverhältnisse:
 
 Die betroffene Person lebe derzeit in einer {wohnung} und sei {lebt}.
 
-Familiäre Situation, Angehörige und soziale Kontakte:
+Zur familiären Situation sei bekannt, dass {familie}
 
-{familie}
 
---------------------------------------------------
+------------------------------------------------------------
 
 2. Zur finanziellen Situation
 
-Einkommen / Leistungen:
 
-Die betroffene Person verfüge derzeit über folgende Leistungen bzw. Einkünfte:
+Die betroffene Person verfüge derzeit über folgende Einkünfte bzw. Leistungen:
+
 {einkommen}
 
-Schulden / offene Forderungen:
+Die betroffene Person habe Schulden bzw. offene Forderungen in Höhe von:
 
 {schulden}
 
-Die monatlichen Mietkosten belaufen sich auf ca. {miete} Euro.
+Die monatlichen Mietkosten beliefen sich auf ca. {miete} Euro.
 
---------------------------------------------------
 
-3. Gesundheitliche Situation
+------------------------------------------------------------
 
-Gesundheitliche Einschränkungen:
+3. Zur gesundheitlichen Situation
 
-"""
 
-    if psychisch:
-        bericht += "- Hinweise auf psychische Einschränkungen bestehen.\n"
+{gesundheit}
 
-    if koerperlich:
-        bericht += "- Körperliche Einschränkungen wurden geschildert.\n"
 
-    if sucht:
-        bericht += "- Hinweise auf eine Suchterkrankung bzw. Alkoholproblematik bestehen.\n"
-
-    bericht += f"""
-
-Diagnosen / gesundheitliche Einschätzung:
-
-{diagnosen}
-
-Pflegegrad:
-{pflegegrad}
-
-Behandlungssituation:
-
-{arzt}
-
---------------------------------------------------
+------------------------------------------------------------
 
 4. Zur praktischen Lebensbewältigung
 
-Die Wohnsituation wirkte bei dem Hausbesuch insgesamt: {wohnung_zustand}.
 
-"""
+{alltag_text}
 
-    if post:
-        bericht += """
-Es zeigten sich ungeöffnete Schreiben sowie Hinweise auf Schwierigkeiten bei der eigenständigen Bearbeitung behördlicher Angelegenheiten.
-"""
 
-    if geld:
-        bericht += """
-Es bestehen Hinweise auf Unsicherheiten im Umgang mit finanziellen Angelegenheiten.
-"""
+------------------------------------------------------------
 
-    if arztmeidung:
-        bericht += """
-Eine ausreichende medizinische Anbindung besteht derzeit offenbar nicht.
-"""
+5. Hilfen und Betreuungsbedarf
 
-    bericht += f"""
 
-Weitere Beobachtungen zur Alltagsbewältigung:
-
-{alltag}
-
---------------------------------------------------
-
-5. Einschätzung des Betreuungsbedarfs
-
-Bereits bestehende Hilfen:
+Derzeit erfolge bereits folgende Unterstützung:
 
 {hilfen}
 
-Aus fachlicher Sicht erscheinen folgende Aufgabenkreise erforderlich:
+Aus fachlicher Sicht erscheine insbesondere Unterstützung in folgenden Bereichen erforderlich:
 
-"""
+{aufgaben}
 
-    for punkt in betreuung:
-        bericht += f"- {punkt}\n"
-
-    bericht += f"""
-
-Weitere fachliche Einschätzung:
 
 {schluss}
 
---------------------------------------------------
 
-Schlussbemerkung
+------------------------------------------------------------
 
-Aus den im Rahmen des Hausbesuchs gewonnenen Erkenntnissen ergibt sich, dass die betroffene Person derzeit nur eingeschränkt in der Lage erscheint, ihre Angelegenheiten eigenständig und ausreichend zu regeln.
+Aus den im Rahmen des Hausbesuchs gewonnenen Erkenntnissen ergebe sich, dass die betroffene Person derzeit nur eingeschränkt in der Lage erscheine, ihre Angelegenheiten eigenständig und ausreichend zu regeln.
 
-Eine rechtliche Betreuung erscheint aus fachlicher Sicht prüfenswert.
-
+Die Einrichtung einer rechtlichen Betreuung erscheine aus fachlicher Sicht weiterhin prüfenswert.
 """
 
-    st.success("Sozialbericht erfolgreich erstellt")
+        st.success("Bericht erfolgreich erstellt")
 
-    st.text_area(
-        "Fertiger Bericht",
-        bericht,
-        height=900
-    ) 
+        st.text_area(
+            "Fertiger Bericht",
+            bericht,
+            height=1200
+        ) 

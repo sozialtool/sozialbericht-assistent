@@ -1,40 +1,31 @@
 import streamlit as st
 
-# SESSION STATE
-
-if "beruf" not in st.session_state:
-    st.session_state.beruf = ""
-
-if "biografie" not in st.session_state:
-    st.session_state.biografie = ""
-
-if "wohnung" not in st.session_state:
-    st.session_state.wohnung = ""
-
-if "lebt" not in st.session_state:
-    st.session_state.lebt = ""
-
-if "wohntext" not in st.session_state:
-    st.session_state.wohntext = ""
-
-if "familie" not in st.session_state:
-    st.session_state.familie = ""
-
-
-# SEITE
-
+# Seitenlayout
 st.set_page_config(
     page_title="Sozialbericht-Assistent",
     layout="wide"
 )
 
+# Session-State initialisieren
+defaults = {
+    "beruf": "",
+    "biografie": "",
+    "wohnung": "",
+    "lebt": "",
+    "wohntext": "",
+    "familie": ""
+}
+
+for key, value in defaults.items():
+    if key not in st.session_state:
+        st.session_state[key] = value
+
+# Titel
 st.title("🧾 Sozialbericht-Assistent")
 
 st.markdown("---")
 
-
-# SIDEBAR
-
+# Sidebar
 st.sidebar.title("Bereiche")
 
 bereich = st.sidebar.radio(
@@ -47,14 +38,12 @@ bereich = st.sidebar.radio(
     ]
 )
 
-
 # SOZIALE SITUATION
-
 if bereich == "Soziale Situation":
 
     st.header("Biografie und beruflicher Werdegang")
 
-    st.selectbox(
+    st.session_state.beruf = st.selectbox(
         "Berufliche Situation",
         [
             "Rentner/in",
@@ -63,25 +52,22 @@ if bereich == "Soziale Situation":
             "EU-Rente",
             "Grundsicherung",
             "sonstige"
-        ],
-        key="beruf"
+        ]
     )
 
-    st.text_area(
+    st.session_state.biografie = st.text_area(
         "Biografische Angaben",
+        value=st.session_state.biografie,
         height=250,
-        placeholder="z.B. Ausbildung, frühere Tätigkeit, gesundheitliche Entwicklung ...",
-        key="biografie"
+        placeholder="z.B. Ausbildung, frühere Tätigkeit, gesundheitliche Entwicklung ..."
     )
-
 
 # WOHNSITUATION
-
 elif bereich == "Wohnsituation":
 
     st.header("Wohn- und Lebensverhältnisse")
 
-    st.selectbox(
+    st.session_state.wohnung = st.selectbox(
         "Wohnform",
         [
             "1-Raum-Wohnung",
@@ -89,45 +75,39 @@ elif bereich == "Wohnsituation":
             "betreutes Wohnen",
             "Pflegeheim",
             "Wohngemeinschaft"
-        ],
-        key="wohnung"
+        ]
     )
 
-    st.selectbox(
+    st.session_state.lebt = st.selectbox(
         "Lebenssituation",
         [
             "alleinlebend",
             "mit Angehörigen",
             "mit Partner/in",
             "mit Mitbewohnern"
-        ],
-        key="lebt"
+        ]
     )
 
-    st.text_area(
+    st.session_state.wohntext = st.text_area(
         "Weitere Angaben",
+        value=st.session_state.wohntext,
         height=250,
-        placeholder="z.B. Zustand der Wohnung, Versorgung, Haushaltsführung ...",
-        key="wohntext"
+        placeholder="z.B. Zustand der Wohnung, Versorgung, Haushaltsführung ..."
     )
-
 
 # FAMILIE
-
 elif bereich == "Familiäre Situation":
 
     st.header("Angehörige / Unterstützung")
 
-    st.text_area(
+    st.session_state.familie = st.text_area(
         "Familiäre Situation",
+        value=st.session_state.familie,
         height=300,
-        placeholder="z.B. Angehörige, Kontaktpersonen, Unterstützungssystem ...",
-        key="familie"
+        placeholder="z.B. Angehörige, Kontaktpersonen, Unterstützungssystem ..."
     )
 
-
 # BERICHT
-
 elif bereich == "Bericht":
 
     st.header("Bericht erstellen")
@@ -149,7 +129,6 @@ Weitere biografische Angaben:
 {st.session_state.biografie}
 
 
-
 2. Wohn- und Lebensverhältnisse
 
 Die betroffene Person lebt derzeit in folgender Wohnform:
@@ -165,7 +144,6 @@ Weitere Angaben:
 {st.session_state.wohntext}
 
 
-
 3. Familiäre Situation
 
 {st.session_state.familie}
@@ -176,5 +154,5 @@ Weitere Angaben:
         st.text_area(
             "Fertiger Bericht",
             bericht,
-            height=500
+            height=600
         ) 
